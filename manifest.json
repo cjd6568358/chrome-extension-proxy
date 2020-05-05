@@ -18,12 +18,13 @@
     "http://*/*",
     "https://*/*"
   ],
-  "content_scripts": [
-    {
-      "matches": ["http://*/*","https://*/*"],
-      "js": ["js/test.js"],
-      "run_at": "document_start"
-    }
-  ],
-  "web_accessible_resources": ["js/inject.js"]
+  "background": { "scripts": ["js/background.js"] }
+  // "content_scripts": [
+  //   {
+  //     "matches": ["http://*/*","https://*/*"],
+  //     "js": ["js/test.js"],
+  //     "run_at": "document_start"
+  //   }
+  // ],
+  // "web_accessible_resources": ["js/test.js"]
 }
