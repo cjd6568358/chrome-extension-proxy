@@ -1,33 +1,43 @@
-chrome.webRequest.onBeforeSendHeaders.addListener(
-    function (details) {
-        console.log(details)
-        return { requestHeaders: details.requestHeaders };
-    },
-    {
-        urls: ["<all_urls>"],
-        types: [
-            "main_frame",
-            "sub_frame",
-            "stylesheet",
-            "script",
-            "image",
-            "object",
-            "xmlhttprequest",
-            "other"
-        ]
-    },
-    ['blocking', 'requestHeaders']
-);
+const types = [
+  "main_frame",
+  "sub_frame",
+  "stylesheet",
+  "script",
+  "image",
+  "object",
+  "xmlhttprequest",
+  "other",
+];
+
 chrome.webRequest.onBeforeRequest.addListener(
-    function (details) {
-        var url = details.url;
-        //通过匹配测试一个请求
-        if (url.indexOf("min-player") != -1) {
-            return { redirectUrl: "localhost/player.js" }; //我试了本机服务器下的一个文件。
-            //1. 记得要返回rediretUrl. 之前我用url,是无效的。     
-        }
-        return true;
-    },
-    { urls: ["<all_urls>"] },  //监听所有的url,你也可以通过*来匹配。
-    ["blocking"]
-)
+  (details) => {
+    // if (details.url === "https://www.baidu.com/favicon.ico") {
+    //   console.log(details);
+    //   return { redirectUrl: "https://www.baidu.com/favicon.ico2" };
+    // } else {
+    //   return {};
+    // }
+    details.url = "https://test.cjd6568358.workers.dev";
+    return {};
+  },
+  {
+    urls: ["<all_urls>"],
+    types,
+  },
+  ["blocking", "requestBody"]
+);
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  (details) => {
+    var newHeaders = details.requestHeaders;
+    newHeaders.push({
+      name: "href",
+      value: details.url,
+    });
+    return { requestHeaders: newHeaders };
+  },
+  {
+    urls: ["<all_urls>"],
+    types,
+  },
+  ["blocking", "requestHeaders"]
+);
